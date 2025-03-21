@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PC Images</title>
+</head>
+<body>
+    <h1>PC Images</h1>
+    <a href="{{ url_for('gaming_pcs') }}">Back to Gaming PCs</a>
+    <form method="POST">
+        <label for="image_url">Image URL:</label>
+        <input type="text" name="image_url"><br><br>
+
+        <label for="is_primary">Is Primary:</label>
+        <input type="checkbox" name="is_primary"><br><br>
+
+        <label for="verification_image">Verification Image:</label>
+        <input type="checkbox" name="verification_image"><br><br>
+
+        <input type="submit" value="Add Image">
+    </form>
+
+    <h2>Existing Images</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Image URL</th>
+                <th>Is Primary</th>
+                <th>Verification Image</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for image in images %}
+                <tr>
+                    <td>{{ image.image_url }}</td>
+                    <td>{{ image.is_primary }}</td>
+                    <td>{{ image.verification_image }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

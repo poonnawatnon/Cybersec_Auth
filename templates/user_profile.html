@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+    <div class="profile-container">
+        <h1>User Profile</h1>
+        
+        <!-- Profile Details (Initially Visible) -->
+        <div id="profile-details" class="profile-details">
+            <div class="profile-row">
+                <label for="username">Username:</label>
+                <p id="username">{{ user['username'] }}</p>
+            </div>
+            <div class="profile-row">
+                <label for="email">Email:</label>
+                <p id="email">{{ user['email'] }}</p>
+            </div>
+            <div class="profile-row">
+                <label for="firstname">First Name:</label>
+                <p id="firstname">{{ user['first_name'] }}</p>
+            </div>
+            <div class="profile-row">
+                <label for="lastname">Last Name:</label>
+                <p id="lastname">{{ user['last_name'] }}</p>
+            </div>
+            <div class="profile-row">
+                <label for="address">Address:</label>
+                <p id="address">{{ user['address'] }}</p>
+            </div>
+            <div class="profile-row">
+                <label for="phone_number">Tel:</label>
+                <p id="phone_number">{{ user['phone_number'] }}</p>
+            </div>
+            <div class="profile-row">
+                <label for="registration-date">Registration Date:</label>
+                <p id="registration-date">{{ user['registration_date'].strftime('%Y-%m-%d %H:%M:%S') }}</p>
+            </div>
+            <div class="profile-row-button">
+                <button onclick="toggleEditForm()">Edit Profile</button>
+            </div>
+        </div>
+
+        <!-- Edit Form (Initially Hidden) -->
+        <div id="edit-form" class="edit-profile-form" style="display: none;">
+            <form method="POST" action="{{ url_for('user_profile') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="profile-row">
+                    <label for="username">Username:</label>
+                    <input type="text" name="username" id="username" value="{{ user['username'] }}" required>
+                </div>
+                <div class="profile-row">
+                    <label for="email">Email:</label>
+                    <input type="email" name="email" id="email" value="{{ user['email'] }}" required>
+                </div>
+                <div class="profile-row">
+                    <label for="firstname">First Name:</label>
+                    <input type="text" name="first_name" id="firstname" value="{{ user['first_name'] }}" required>
+                </div>
+                <div class="profile-row">
+                    <label for="lastname">Last Name:</label>
+                    <input type="text" name="last_name" id="lastname" value="{{ user['last_name'] }}" required>
+                </div>
+                <div class="profile-row">
+                    <label for="address">Address:</label>
+                    <input type="text" name="address" id="address" value="{{ user['address'] }}">
+                </div>
+                <div class="profile-row">
+                    <label for="phone_number">Tel:</label>
+                    <input type="text" name="phone_number" id="phone_number" value="{{ user['phone_number'] }}">
+                </div>
+                <div class="profile-row-button">
+                    <button type="submit">Save Changes</button>
+                    <button type="button" onclick="toggleEditForm()">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleEditForm() {
+            var profileDetails = document.getElementById('profile-details');
+            var editForm = document.getElementById('edit-form');
+
+            // Toggle the visibility of the profile and form
+            if (profileDetails.style.display === 'none') {
+                profileDetails.style.display = 'block';
+                editForm.style.display = 'none';
+            } else {
+                profileDetails.style.display = 'none';
+                editForm.style.display = 'block';
+            }
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game Performance</title>
+</head>
+<body>
+    <h1>Game Performance</h1>
+    <a href="{{ url_for('gaming_pcs') }}">Back to Gaming PCs</a>
+    <form method="POST">
+        <label for="game_name">Game Name:</label>
+        <input type="text" name="game_name"><br><br>
+
+        <label for="fps_1080p">FPS at 1080p:</label>
+        <input type="number" name="fps_1080p"><br><br>
+
+        <label for="fps_1440p">FPS at 1440p:</label>
+        <input type="number" name="fps_1440p"><br><br>
+
+        <label for="fps_4k">FPS at 4K:</label>
+        <input type="number" name="fps_4k"><br><br>
+
+        <label for="settings_preset">Settings Preset:</label>
+        <input type="text" name="settings_preset"><br><br>
+
+        <label for="benchmark_details">Benchmark Details:</label>
+        <textarea name="benchmark_details"></textarea><br><br>
+
+        <input type="submit" value="Add Performance">
+    </form>
+
+    <h2>Existing Performance</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Game Name</th>
+                <th>FPS at 1080p</th>
+                <th>FPS at 1440p</th>
+                <th>FPS at 4K</th>
+                <th>Settings Preset</th>
+                <th>Benchmark Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for performance in performances %}
+                <tr>
+                    <td>{{ performance.game_name }}</td>
+                    <td>{{ performance.fps_1080p }}</td>
+                    <td>{{ performance.fps_1440p }}</td>
+                    <td>{{ performance.fps_4k }}</td>
+                    <td>{{ performance.settings_preset }}</td>
+                    <td>{{ performance.benchmark_details }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

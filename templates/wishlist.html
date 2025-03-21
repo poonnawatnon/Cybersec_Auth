@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Your Wishlist{% endblock %}
+
+{% block content %}
+    <div class="product-header d-flex justify-content-between align-items-center mb-4">
+        <!-- Display Total Number of Wishlist Items -->
+        <div class="product-stats">
+            <p>Total Items in Wishlist: {{ wishlist_items|length }}</p>
+        </div>
+
+        <!-- Sort By Dropdown -->
+        <div class="sort-by">
+            <label for="sort">Sort By:</label>
+            <select id="sort" name="sort" onchange="window.location.href='?sort=' + this.value + '&limit={{ limit }}'">
+                <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                <option value="name_asc" {% if sort_by == 'name_asc' %}selected{% endif %}>Name: A-Z</option>
+                <option value="name_desc" {% if sort_by == 'name_desc' %}selected{% endif %}>Name: Z-A</option>
+            </select>
+        </div>
+
+        <!-- Items Per Page Dropdown -->
+        <div class="product-limit">
+            <label for="limit">Items Per Page:</label>
+            <select id="limit" name="limit" onchange="window.location.href='?sort={{ sort_by }}&limit=' + this.value">
+                <option value="5" {% if limit == 5 %}selected{% endif %}>5</option>
+                <option value="10" {% if limit == 10 %}selected{% endif %}>10</option>
+                <option value="15" {% if limit == 15 %}selected{% endif %}>15</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Wishlist Grid -->
+    <div class="product-grid">
+        {% for item in wishlist_items %}
+        <div class="product-card">
+            <img src="{{ url_for('static', filename=item['image_url']) }}" alt="{{ item['name'] }}">
+            <h2>{{ item['name'] }}</h2>
+            <p>{{ item['description'] }}</p>
+            <p>Price: ${{ item['price'] }}</p>
+
+            <form action="{{ url_for('remove_from_wishlist', product_id=item['product_id']) }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"> <!-- CSRF token for form submission (PUT,POST,DELETE)-->  
+                <button type="submit" class="btn btn-danger">Remove from Wishlist</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        {% if wishlist_items %}
+        <ul class="pagination">
+            {% if page > 1 %}
+            <li class="page-item"><a class="page-link" href="{{ url_for('wishlist', page=page-1) }}">Previous</a></li>
+            {% endif %}
+            <li class="page-item"><span class="page-link">{{ page }}</span></li>
+            {% if wishlist_items|length == limit %}
+            <li class="page-item"><a class="page-link" href="{{ url_for('wishlist', page=page+1) }}">Next</a></li>
+            {% endif %}
+        </ul>
+        {% endif %}
+    </div>
+
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Gaming PCs{% endblock %}
+
+{% block content %}
+    <h1>All Gaming PCs</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Condition</th>
+                <th>Price</th>
+                <th>Seller</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pc in pcs %}
+                <tr>
+                    <td>{{ pc.title }}</td>
+                    <td>{{ pc.description }}</td>
+                    <td>{{ pc.condition }}</td>
+                    <td>{{ pc.price }}</td>
+                    <td>{{ pc.seller_id }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <h1 style="color: red;"> help</h1>
+    <br>
+    <a href="{{ url_for('add_gaming_pc') }}">Add New Gaming PC</a>
+    
+{% endblock %}

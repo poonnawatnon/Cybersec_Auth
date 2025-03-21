@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Gaming PCs{% endblock %}
+
+{% block content %}
+    <h1>All Parts</h1>
+    <a href="{{ url_for('add_parts') }}">Add New Part</a>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Seller ID</th>
+                <th>Category</th>
+                <th>Brand</th>
+                <th>Model</th>
+                <th>Condition</th>
+                <th>Price</th>
+                <th>Warranty Status</th>
+                <th>Warranty Remaining</th>
+                <th>Verification Status</th>
+                <th>Selling Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for part in parts %}
+                <tr>
+                    <td>{{ part.seller_id }}</td>
+                    <td>{{ part.category }}</td>
+                    <td>{{ part.brand }}</td>
+                    <td>{{ part.model }}</td>
+                    <td>{{ part.condition_ }}</td>
+                    <td>{{ part.price }}</td>
+                    <td>{{ part.warranty_status }}</td>
+                    <td>{{ part.warranty_remaining }}</td>
+                    <td>{{ part.verification_status }}</td>
+                    <td>{{ part.selling_status }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

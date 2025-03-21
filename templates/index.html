@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    {% extends 'base.html' %}
+
+    <!-- Main Content -->
+    {% block content %}
+    <!-- Search Bar below the Navbar with Curve -->
+    <div class="search-container">
+        <input type="text" placeholder="Search...">
+        <button type="submit">Search</button>
+    </div>
+
+    <h1>Welcome to Our Website</h1>
+    <p>This is our homepage. Use the navbar to see more.</p>
+    {% endblock %}
+</body>
+</html>

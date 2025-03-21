@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My App{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Ensure full-width layout */
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        .navbar-upper {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            margin-right: auto;
+        }
+
+        .profile-icons {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .profile-icons a {
+            font-size: 1.5rem;
+            text-decoration: none;
+            color: #000;
+        }
+
+        .profile-icons a:hover {
+            color: grey;
+        }
+
+        /* Lower Navbar Styling */
+        .navbar-lower {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .navbar-lower a {
+            margin: 0 15px;
+            font-size: 1rem;
+            text-decoration: none;
+            color: #000;
+        }
+
+        .navbar-lower a:hover {
+            color: grey;
+        }
+
+        .form-inline {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-control {
+            width: 200px;
+        }
+
+        /* Sidebar styling */
+        .offcanvas {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 300px;
+            background-color: #f8f9fa;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            z-index: 1050;
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(100%);
+        }
+
+        .offcanvas.show {
+            display: block;
+            transform: translateX(0);
+        }
+
+        .offcanvas-header {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .offcanvas-body {
+            padding: 15px;
+        }
+
+        /* Adjust close button */
+        .btn-close {
+            font-size: 1.5rem;
+            padding: 0.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .btn-close:hover {
+            color: red;
+        }
+
+        .btn-close:focus {
+            outline: none;
+            box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+        }
+
+        .list-group-item {
+            padding: 10px;
+        }
+
+        .list-group-item p {
+            margin: 0;
+        }
+
+        .list-group-item small {
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Upper Navbar -->
+    <div class="navbar-upper">
+        <a class="navbar-brand" href="{{ url_for('index') }}">
+            {% if 'user_id' in session %}
+                MyWebsite (Logged In)
+            {% else %}
+                MyWebsite (Guest)
+            {% endif %}
+        </a>
+        {% if 'user_id' in session %}
+        <div class="profile-icons">
+            <a href="{{ url_for('wishlist') }}"><i class="fas fa-heart"></i></a>
+            <a href="javascript:void(0);" onclick="openNotificationsSidebar()"><i class="fas fa-bell"></i></a>
+            <a href="{{ url_for('cart') }}"><i class="fas fa-shopping-cart"></i></a>
+            <a href="{{ url_for('user_profile') }}"><i class="fas fa-user"></i></a>
+            <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i></a>
+        </div>
+        {% else %}
+        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+        <a class="nav-link" href="{{ url_for('signup') }}">Signup</a>
+        {% endif %}
+    </div>
+
+    <!-- Lower Navbar -->
+    <div class="navbar-lower">
+        <div class="nav-links">
+            <a class="nav-link" href="{{ url_for('order') }}">Order</a>
+            <a class="nav-link" href="{{ url_for('support') }}">Support</a>
+            <a class="nav-link" href="{{ url_for('gaming_pcs') }}">Gaming PCs</a>
+            <a class="nav-link" href="{{ url_for('parts') }}">Parts</a>
+        </div>
+        <form class="form-inline my-2 my-lg-0" action="{{ url_for('searchbar') }}" method="GET">
+            <input class="form-control mr-sm-2" type="search" name="q" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+
+    <!-- Notifications Sidebar -->
+    <div id="notificationsSidebar" class="offcanvas">
+        <div class="offcanvas-header">
+            <h5>Notifications</h5>
+            <button type="button" class="btn-close text-reset" onclick="closeNotificationsSidebar()">×</button>
+        </div>
+        <div class="offcanvas-body" id="notificationsContent">
+            <p class="text-center text-muted">Loading notifications...</p>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alerts">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        function openNotificationsSidebar() {
+            const sidebar = document.getElementById('notificationsSidebar');
+            sidebar.classList.add('show');
+
+            // Fetch notifications dynamically
+            fetch('/notifications')
+                .then(response => response.json())
+                .then(data => {
+                    const contentDiv = document.getElementById('notificationsContent');
+                    contentDiv.innerHTML = '';
+
+                    if (data.notifications.length > 0) {
+                        const ul = document.createElement('ul');
+                        ul.className = 'list-group';
+
+                        data.notifications.forEach(notification => {
+                            const li = document.createElement('li');
+                            li.className = 'list-group-item';
+                            li.innerHTML = `
+                                <p>${notification.message}</p>
+                                <small class="text-muted">${notification.timestamp}</small>
+                            `;
+                            ul.appendChild(li);
+                        });
+
+                        contentDiv.appendChild(ul);
+                    } else {
+                        contentDiv.innerHTML = '<p class="text-center">No notifications available.</p>';
+                    }
+                });
+        }
+
+        function closeNotificationsSidebar() {
+            const sidebar = document.getElementById('notificationsSidebar');
+            sidebar.classList.remove('show');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PC Specifications</title>
+</head>
+<body>
+    <h1>PC Specifications</h1>
+    <a href="{{ url_for('gaming_pcs') }}">Back to Gaming PCs</a>
+    <form method="POST">
+        <label for="cpu">CPU:</label>
+        <input type="text" name="cpu"><br><br>
+
+        <label for="gpu">GPU:</label>
+        <input type="text" name="gpu"><br><br>
+
+        <label for="ram">RAM:</label>
+        <input type="text" name="ram"><br><br>
+
+        <label for="storage">Storage:</label>
+        <input type="text" name="storage"><br><br>
+
+        <label for="motherboard">Motherboard:</label>
+        <input type="text" name="motherboard"><br><br>
+
+        <label for="psu">PSU:</label>
+        <input type="text" name="psu"><br><br>
+
+        <label for="case">Case:</label>
+        <input type="text" name="case"><br><br>
+
+        <label for="cooling_system">Cooling System:</label>
+        <input type="text" name="cooling_system"><br><br>
+
+        <label for="operating_system">Operating System:</label>
+        <input type="text" name="operating_system"><br><br>
+
+        <label for="additional_info">Additional Info:</label>
+        <textarea name="additional_info"></textarea><br><br>
+
+        <input type="submit" value="Add Specifications">
+    </form>
+
+    <h2>Existing Specifications</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>CPU</th>
+                <th>GPU</th>
+                <th>RAM</th>
+                <th>Storage</th>
+                <th>Motherboard</th>
+                <th>PSU</th>
+                <th>Case</th>
+                <th>Cooling System</th>
+                <th>Operating System</th>
+                <th>Additional Info</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for spec in specs %}
+                <tr>
+                    <td>{{ spec.cpu }}</td>
+                    <td>{{ spec.gpu }}</td>
+                    <td>{{ spec.ram }}</td>
+                    <td>{{ spec.storage }}</td>
+                    <td>{{ spec.motherboard }}</td>
+                    <td>{{ spec.psu }}</td>
+                    <td>{{ spec.case }}</td>
+                    <td>{{ spec.cooling_system }}</td>
+                    <td>{{ spec.operating_system }}</td>
+                    <td>{{ spec.additional_info }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

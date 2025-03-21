@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Order{% endblock %}
+
+{% block content %}
+    <div class="product-header d-flex justify-content-between align-items-center mb-4">
+        <!-- Display Total Number of Products -->
+        <div class="product-stats">
+            <p>Total Products: {{ products|length }}</p>
+        </div>
+
+        <!-- Sort By Dropdown -->
+        <div class="sort-by">
+            <label for="sort">Sort By:</label>
+            <select id="sort" name="sort" onchange="window.location.href='?sort=' + this.value + '&limit={{ limit }}'">
+                <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                <option value="name_asc" {% if sort_by == 'name_asc' %}selected{% endif %}>Name: A-Z</option>
+                <option value="name_desc" {% if sort_by == 'name_desc' %}selected{% endif %}>Name: Z-A</option>
+            </select>
+        </div>
+
+        <!-- Products Per Page Dropdown -->
+        <div class="product-limit">
+            <label for="limit">Products Per Page:</label>
+            <select id="limit" name="limit" onchange="window.location.href='?sort={{ sort_by }}&limit=' + this.value">
+                <option value="5" {% if limit == 5 %}selected{% endif %}>5</option>
+                <option value="10" {% if limit == 10 %}selected{% endif %}>10</option>
+                <option value="15" {% if limit == 15 %}selected{% endif %}>15</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="product-grid">
+        {% for product in products %}
+        <div class="product-card" onclick="window.location.href='{{ url_for('get_product_details', product_id=product.product_id) }}'">
+            <img src="{{ product.image_url }}" alt="{{ product.name }}">
+            <h2>{{ product.name }}</h2>
+            <p>{{ product.description }}</p>
+            <p>Price: ${{ product.price }}</p>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} Details{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{{ url_for('static', filename=product['image_url']) }}" alt="Product Image" class="img-fluid" style="max-width: 100%; height: auto;">
+        </div>
+        <div class="col-md-6">
+            <h1>{{ product.name }}</h1>
+            <p>{{ product.description }}</p>
+            <p class="font-weight-bold">Price: ${{ product.price }}</p>
+            <p class="text-success">In stock: {{ product.stock_quantity }}</p>
+
+            <!-- Quantity Selector -->
+            <div class="form-group">
+                <label for="quantity">Quantity:</label>
+                <select id="quantity" name="quantity" class="form-control">
+                    {% for i in range(1, product.stock_quantity if product.stock_quantity < 10 else 10) %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Add to Wishlist -->
+            <input type="hidden" name="csrf_token" id="csrf_token"  value="{{ csrf_token() }}"> <!-- CSRF token for form submission (PUT,POST,DELETE)-->  
+            <button id="add-to-wishlist-btn" onclick="addToWishlist({{ product.product_id }})" class="btn btn-outline-danger" type="button">
+                <i class="fas fa-heart"></i> Add to Wishlist
+            </button>
+            
+
+            <!-- Add to Cart Button -->
+            <form action="{{ url_for('add_product', product_id=product.product_id) }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"> <!-- CSRF token for form submission (PUT,POST,DELETE)-->  
+                <input type="hidden" name="quantity" id="selected-quantity" value="1">
+                <button type="submit" class="btn btn-primary btn-lg">Add to Cart</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<script>
+
+    // Sync quantity dropdown with hidden form input
+    document.getElementById('quantity').addEventListener('change', function() {
+        document.getElementById('selected-quantity').value = this.value;
+    });
+
+    // Add to Wishlist functionality
+    function addToWishlist(productId) {
+        fetch(`/add_to_wishlist/${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.getElementById('csrf_token').value  // Pass CSRF token in the request header
+            },
+            body: JSON.stringify({ product_id: productId }) // Optional: Include additional data in the body
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Display success feedback to the user
+                alert('Product added to wishlist!');
+            } else {
+                // Display error message from server
+                alert(data.message || 'Failed to add product to wishlist.');  // Display the server's message
+            }
+        })
+        .catch(error => {
+            // Handle any network or server errors
+            alert('Error adding product to wishlist:',error);
+            console.error('Error:', error);
+        });
+    }
+</script>
