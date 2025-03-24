@@ -1,0 +1,90 @@
+CREATE TABLE Users (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    address VARCHAR(255),
+    phone_number VARCHAR(20)
+);
+
+CREATE TABLE Products (
+    product_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    category VARCHAR(100),
+    image_url VARCHAR(255),
+    stock_quantity INT
+);
+
+CREATE TABLE Gaming_PCs (
+    pc_id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    condition VARCHAR(50),
+    price DECIMAL(10, 2) NOT NULL,
+    seller_id INT,
+    FOREIGN KEY (seller_id) REFERENCES Users(user_id)
+);
+
+CREATE TABLE PC_Specifications (
+    spec_id INT PRIMARY KEY AUTO_INCREMENT,
+    pc_id INT,
+    cpu VARCHAR(255),
+    gpu VARCHAR(255),
+    ram VARCHAR(50),
+    storage VARCHAR(100),
+    motherboard VARCHAR(255),
+    psu VARCHAR(100),
+    case VARCHAR(255),
+    cooling_system VARCHAR(255),
+    operating_system VARCHAR(255),
+    additional_info TEXT,
+    FOREIGN KEY (pc_id) REFERENCES Gaming_PCs(pc_id)
+);
+
+CREATE TABLE Game_Performance (
+    performance_id INT PRIMARY KEY AUTO_INCREMENT,
+    pc_id INT,
+    game_name VARCHAR(255) NOT NULL,
+    fps_1080p INT,
+    fps_1440p INT,
+    fps_4k INT,
+    settings_preset VARCHAR(100),
+    benchmark_details TEXT,
+    FOREIGN KEY (pc_id) REFERENCES Gaming_PCs(pc_id)
+);
+
+CREATE TABLE PC_Images (
+    image_id INT PRIMARY KEY AUTO_INCREMENT,
+    pc_id INT,
+    image_url VARCHAR(255),
+    is_primary BOOLEAN,
+    verification_image VARCHAR(255),
+    FOREIGN KEY (pc_id) REFERENCES Gaming_PCs(pc_id)
+);
+
+CREATE TABLE Parts (
+    part_id INT PRIMARY KEY AUTO_INCREMENT,
+    seller_id INT,
+    category VARCHAR(100),
+    brand VARCHAR(100),
+    model VARCHAR(255),
+    condition VARCHAR(50),
+    price DECIMAL(10, 2) NOT NULL,
+    warranty_status VARCHAR(50),
+    warranty_remaining VARCHAR(100),
+    verification_status VARCHAR(50),
+    selling_status VARCHAR(50),
+    FOREIGN KEY (seller_id) REFERENCES Users(user_id)
+);
+
+CREATE TABLE Wishlist (
+    wishlist_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    product_id INT,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (product_id) REFERENCES Products(product_id)
+);
