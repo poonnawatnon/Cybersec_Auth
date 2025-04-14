@@ -15,7 +15,7 @@ from flask_wtf.csrf import validate_csrf
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
-app.config['SECRET_KEY'] = 'poon@psm16828'  # Set a secret key for session management (must secure)
+app.config['SECRET_KEY'] = 'ADD_YOUR_KEY_HERE'  # Set a secret key for session management (must secure)
 csrf = CSRFProtect(app)
 serializer = URLSafeTimedSerializer(app.secret_key)
 
